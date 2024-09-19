@@ -1,0 +1,95 @@
+
+server:
+  port: 8060
+
+eureka:
+  instance:
+    ip-address: localhost
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+spring:
+  application:
+    name: apiGateway
+  cloud:
+    gateway:
+      routes:
+        - id: booking-service
+          uri: lb://booking-service
+          predicates:
+            - Path=/booking/**, /gestionDeCinema/booking/**
+          filters:
+            - ContextPathRewritePath=/gestionDeCinema/booking/(?<path>.*), /$\{path}
+            - RewritePath=/booking/(?<path>.*), /$\{path}
+
+        - id: movies-service
+          uri: lb://movies-service
+          predicates:
+            - Path=/movies/**, /gestionDeCinema/movies/**
+          filters:
+            - ContextPathRewritePath=/gestionDeCinema/movies/(?<path>.*), /$\{path}
+            - RewritePath=/movies/(?<path>.*), /$\{path}
+
+        - id: catalog-service
+          uri: lb://catalog-service
+          predicates:
+            - Path=/catalog/**, /gestionDeCinema/catalog/**
+          filters:
+            - ContextPathRewritePath=/gestionDeCinema/catalog/(?<path>.*), /$\{path}
+            - RewritePath=/catalog/(?<path>.*), /$\{path}
+
+        - id: payment-service
+          uri: lb://payment-service
+          predicates:
+            - Path=/payment/**, /gestionDeCinema/payment/**
+          filters:
+            - ContextPathRewritePath=/gestionDeCinema/payment/(?<path>.*), /$\{path}
+            - RewritePath=/payment/(?<path>.*), /$\{path}
+
+        - id: notification-service
+          uri: lb://notification-service
+          predicates:
+            - Path=/notification/**, /gestionDeCinema/notification/**
+          filters:
+            - ContextPathRewritePath=/gestionDeCinema/notification/(?<path>.*), /$\{path}
+            - RewritePath=/notification/(?<path>.*), /$\{path}
+
+
+
+        - id: openapi-proxy
+          uri: https://demos.springdoc.org
+          predicates:
+            - Path=/gestionDeCinema/v3/api-docs/**
+          filters:
+            - RewritePath=/gestionDeCinema/v3/api-docs/(?<path>.*), /gestionDeCinema/${path}/v3/api-docs
+            - RemoveRequestHeader=Cookie
+
+        - id: openapi
+          uri: http://localhost:8060
+          predicates:
+            - Path=/v3/api-docs/**
+          filters:
+            - RewritePath=/v3/api-docs/(?<path>.*), /$\{path}/v3/api-docs
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} ${LOG_LEVEL_PATTERN:-%5p} %m%n"
+  level:
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.http.server.reactive: TRACE
+
+springdoc:
+  cache:
+    disabled: true
+  version: '@springdoc.version@'
+  swagger-ui:
+    use-root-path: true
+  api-docs:
+    version: openapi_3_1
+
+
+
