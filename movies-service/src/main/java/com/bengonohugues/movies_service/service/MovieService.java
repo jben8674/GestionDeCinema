@@ -1,76 +1,48 @@
 package com.bengonohugues.movies_service.service;
 
-import com.bengonohugues.movies_service.dto.CatalogDto;
-import com.bengonohugues.movies_service.dto.MovieDto;
+
+import com.bengonohugues.movies_service.model.Catalog;
 import com.bengonohugues.movies_service.model.Movie;
 import com.bengonohugues.movies_service.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 public class MovieService {
 
     @Autowired
-    private final MovieRepository movieRepository;
+    private MovieRepository filmRepository;
 
-    public MovieService(MovieRepository movieRepository) {
-        this.movieRepository = movieRepository;
+    public List<Movie> getAllMovies() {
+        return filmRepository.findAll();
     }
 
-    public List<MovieDto> getAllMovies() {
-        List<Movie> movies = movieRepository.findAll();
-        return movies.stream().map(this::mapToDto).collect(Collectors.toList());
+    public Movie getMovieById(Long id) {
+        return filmRepository.findById(id).orElse(null);
     }
 
-    public MovieDto getMovieById(Long id) {
-        Movie movie = movieRepository.findById(id).orElseThrow(() -> new RuntimeException("Movie not found"));
-        return mapToDto(movie);
+    public Movie addMovie(Movie film) {
+        return filmRepository.save(film);
     }
 
-    public MovieDto createMovie(MovieDto movieDto) {
-        Movie movie = mapToEntity(movieDto);
-        Movie savedMovie = movieRepository.save(movie);
-        return mapToDto(savedMovie);
-    }
-
-    public MovieDto updateMovie(Long id, MovieDto movieDto) {
-        Movie movie = movieRepository.findById(id).orElseThrow(() -> new RuntimeException("Movie not found"));
-        movie.setTitle(movieDto.getTitle());
-        movie.setGenre(movieDto.getGenre());
-        movie.setDirector(movieDto.getDirector());
-        movie.setReleaseDate(movieDto.getReleaseDate());
-        movie.setDuration(movieDto.getDuration());
-        Movie updatedMovie = movieRepository.save(movie);
-        return mapToDto(updatedMovie);
+    public Movie updateMovie(Long id, Movie film) {
+        if (filmRepository.existsById(id)) {
+            film.setId(id);
+            return filmRepository.save(film);
+        }
+        return null;
     }
 
     public void deleteMovie(Long id) {
-        movieRepository.deleteById(id);
+        filmRepository.deleteById(id);
     }
 
-    // Méthodes pour convertir entre Movie et MovieDto
-    private MovieDto mapToDto(Movie movie) {
-        return new MovieDto(movie.getId(), movie.getTitle(), movie.getGenre(), movie.getDirector(), movie.getReleaseDate(), movie.getDuration());
-    }
-
-    private Movie mapToEntity(MovieDto movieDto) {
-        return new Movie(movieDto.getTitle(), movieDto.getGenre(), movieDto.getDirector(), movieDto.getReleaseDate(), movieDto.getDuration());
-    }
-
-    public void CatalogService() {
-        // Adding some sample movies
-        CatalogDto movie1 = new CatalogDto();
-        movie1.setId(1L);
-        movie1.setTitle("Inception");
-        movie1.setGenre("Science Fiction");
-        movie1.setReleaseDate(LocalDate.of(2010, 7, 16));
-        movie1.setDuration(148);
-        movie1.setDirector("Christopher Nolan");
-
-
+    public Catalog getCatalog() {
+        Catalog catalog = new Catalog();
+        catalog.setMovies(filmRepository.findAll());
+        return catalog;
     }
 }

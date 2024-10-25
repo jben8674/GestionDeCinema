@@ -1,23 +1,42 @@
 package com.bengonohugues.booking_service.model;
 
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
+@Table(name = "bookings")
 public class Booking {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String customerName;
-    private LocalDateTime bookingDateTime;
-    private String roomType;
+    @Column(nullable = false)
+    private Long userId;
+
+    @Column(nullable = false)
+    private Long movieId;
+
+    @ElementCollection
+    @CollectionTable(name = "booking_seats", joinColumns = @JoinColumn(name = "booking_id"))
+    @Column(name = "seat")
+    private List<String> seats;
+
+    @Column(nullable = false)
+    private double totalAmount;
+
+    // Constructeur par défaut
+    public Booking() {
+    }
+
+    // Constructeur avec paramètres
+    public Booking(Long userId, Long movieId, List<String> seats, double totalAmount) {
+        this.userId = userId;
+        this.movieId = movieId;
+        this.seats = seats;
+        this.totalAmount = totalAmount;
+    }
 
     // Getters et Setters
     public Long getId() {
@@ -28,37 +47,35 @@ public class Booking {
         this.id = id;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
-    public LocalDateTime getBookingDateTime() {
-        return bookingDateTime;
+    public Long getMovieId() {
+        return movieId;
     }
 
-    public void setBookingDateTime(LocalDateTime bookingDateTime) {
-        this.bookingDateTime = bookingDateTime;
+    public void setMovieId(Long movieId) {
+        this.movieId = movieId;
     }
 
-    public String getRoomType() {
-        return roomType;
+    public List<String> getSeats() {
+        return seats;
     }
 
-    public void setRoomType(String roomType) {
-        this.roomType = roomType;
+    public void setSeats(List<String> seats) {
+        this.seats = seats;
     }
 
-    @Override
-    public String toString() {
-        return String.format("Booking{id=%d, customerName='%s', bookingDateTime=%s, roomType='%s'}",
-                id, customerName, bookingDateTime, roomType);
+    public double getTotalAmount() {
+        return totalAmount;
     }
 
-    public Object getBookingDate() {
-        return null;
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
     }
 }

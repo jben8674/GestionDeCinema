@@ -2,31 +2,42 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="config-server" />
+        <module name="auth-service" />
         <module name="payment-service" />
+        <module name="config-service" />
         <module name="movies-service" />
         <module name="booking-service" />
         <module name="catalog-service" />
         <module name="apiGateway" />
+        <module name="api-gateway" />
         <module name="ereuka" />
+        <module name="eureka-server" />
         <module name="notification-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="Authentification" target="17" />
+      <module name="config-server" target="17" />
       <module name="payement-service" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="Authentification" options="-parameters" />
+      <module name="api-gateway" options="-parameters" />
       <module name="apiGateway" options="-parameters" />
+      <module name="auth-service" options="-parameters" />
       <module name="booking-service" options="-parameters" />
       <module name="catalog-service" options="-parameters" />
       <module name="config-server" options="-parameters" />
+      <module name="config-service" options="-parameters" />
       <module name="ereuka" options="-parameters" />
+      <module name="eureka-server" options="-parameters" />
       <module name="movies-service" options="-parameters" />
       <module name="notification-service" options="-parameters" />
       <module name="payement-service" options="-parameters" />

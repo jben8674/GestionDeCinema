@@ -4,8 +4,13 @@ import com.bengonohugues.notification_service.model.PaymentNotification;
 import com.bengonohugues.notification_service.model.ReminderNotification;
 import com.bengonohugues.notification_service.model.ReservationConfirmation;
 import com.bengonohugues.notification_service.service.NotificationService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+@Tag( name = "CRUD APIs for Gestion de Cinema",
+       description = "CRUD APIs to Creat, Read, Update, and Delete details"
+)
 
 @RestController
 @RequestMapping("/notification")

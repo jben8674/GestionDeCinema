@@ -1,14 +1,10 @@
 package com.bengonohugues.payment_service.controller;
 
 
-
-import com.bengonohugues.payment_service.dto.PaymentDTO;
 import com.bengonohugues.payment_service.model.Payment;
+import com.bengonohugues.payment_service.model.PaymentResponse;
 import com.bengonohugues.payment_service.sevice.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,29 +16,16 @@ public class PaymentController {
     private PaymentService paymentService;
 
     @PostMapping
-    public ResponseEntity<Payment> createPayment(@RequestBody PaymentDTO paymentDTO) {
-        Payment payment = paymentService.createPayment(paymentDTO);
-        return new ResponseEntity<>(payment, HttpStatus.CREATED);
+    public PaymentResponse processPayment(@RequestBody Payment payment) {
+        return paymentService.processPayment(payment);
     }
 
-    @GetMapping
-    public List<Payment> getAllPayments() {
-        return paymentService.getAllPayments();
+    @GetMapping("/{id}")
+    public PaymentResponse getPaymentStatus(@PathVariable Long id) {
+        return paymentService.getPaymentStatus(id);
     }
-
-
-    // Endpoint DELETE pour supprimer un paiement par ID
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePayment(@PathVariable Long id) {
-        boolean isDeleted = paymentService.deletePayment(id);
-        if (isDeleted) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204 No Content
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404 Not Found
-        }
-
-
-
-
+@GetMapping("/history")
+    public List<Payment> getPaymentHistory(){
+        return paymentService.getPaymentHistory();
     }
 }
