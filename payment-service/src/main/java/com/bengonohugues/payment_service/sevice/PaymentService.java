@@ -1,10 +1,7 @@
 package com.bengonohugues.payment_service.sevice;
 
-
-
-
-import com.bengonohugues.payment_service.dto.PaymentDTO;
 import com.bengonohugues.payment_service.model.Payment;
+import com.bengonohugues.payment_service.model.PaymentResponse;
 import com.bengonohugues.payment_service.repository.PaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,36 +10,42 @@ import java.util.List;
 
 @Service
 public class PaymentService {
+
     @Autowired
     private PaymentRepository paymentRepository;
 
-    public Payment createPayment(PaymentDTO paymentDTO) {
-        Payment payment = new Payment();
-        payment.setTransactionId(paymentDTO.getTransactionId());
-        payment.setAmount(paymentDTO.getAmount());
-        payment.setCurrency(paymentDTO.getCurrency());
-        payment.setStatus("PENDING"); // Initialiser l'état par défaut
+    public PaymentResponse processPayment(Payment payment) {
+        // Enregistrer le paiement dans la base de données
+        Payment savedPayment = paymentRepository.save(payment);
 
-        return paymentRepository.save(payment);
+        // Créer une réponse de paiement
+        PaymentResponse response = new PaymentResponse();
+        response.setId(savedPayment.getId());
+        response.setMontant(savedPayment.getMontant());
+        response.setDatePaiement(savedPayment.getDatePaiement());
+        response.setStatut(PaymentResponse.StatutPaiement.REUSSI); // Simuler un statut réussi
+        response.setMethodePaiement(savedPayment.getMethodePaiement());
+        return response;
     }
 
-    public List<Payment> getAllPayments() {
+    public PaymentResponse getPaymentStatus(Long id) {
+        // Récupérer le paiement depuis la base de données
+        Payment payment = paymentRepository.findById(id).orElse(null);
+        PaymentResponse response = new PaymentResponse();
+
+        if (payment != null) {
+            response.setId(payment.getId());
+            response.setMontant(payment.getMontant());
+            response.setDatePaiement(payment.getDatePaiement());
+            response.setStatut(PaymentResponse.StatutPaiement.REUSSI); // Simuler un statut réussi
+            response.setMethodePaiement(payment.getMethodePaiement());
+        } else {
+            response.setStatut(PaymentResponse.StatutPaiement.ECHOUE); // Statut échoué si pas trouvé
+        }
+        return response;
+    }
+
+    public List<Payment> getPaymentHistory(){
         return paymentRepository.findAll();
     }
-
-    public Payment getPaymentById(Long id) {
-        return paymentRepository.findById(id).orElse(null);
-
-    }
-
-
-    // Méthode pour supprimer un paiement
-    public boolean deletePayment(Long id) {
-        if (paymentRepository.existsById(id)) {
-            paymentRepository.deleteById(id);
-            return true;
-        }
-        return false;
-    }
 }
-

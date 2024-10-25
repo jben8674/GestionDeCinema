@@ -1,22 +1,37 @@
 package com.bengonohugues.payment_service.model;
 
+import jakarta.persistence.*;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "payment") // Explicitly mapping to the table
 public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String transactionId;
-    private Double amount;
-    private String currency;
-    private String status;
 
-    // Getters et setters
+    @Column(name = "id_reservation")
+    private Long idReservation;
+
+    @Column(name = "montant")
+    private double montant;
+
+    @Column(name = "methode_paiement")
+    private String methodePaiement;
+
+    @Column(name = "date_paiement")
+    private LocalDateTime datePaiement;
+
+    // Constructors, getters, and setters
+    public Payment() {}
+
+    public Payment(Long idReservation, double montant, String methodePaiement) {
+        this.idReservation = idReservation;
+        this.montant = montant;
+        this.methodePaiement = methodePaiement;
+        this.datePaiement = LocalDateTime.now(); // Enregistrement de la date de paiement
+    }
 
     public Long getId() {
         return id;
@@ -26,35 +41,35 @@ public class Payment {
         this.id = id;
     }
 
-    public String getTransactionId() {
-        return transactionId;
+    public Long getIdReservation() {
+        return idReservation;
     }
 
-    public void setTransactionId(String transactionId) {
-        this.transactionId = transactionId;
+    public void setIdReservation(Long idReservation) {
+        this.idReservation = idReservation;
     }
 
-    public Double getAmount() {
-        return amount;
+    public double getMontant() {
+        return montant;
     }
 
-    public void setAmount(Double amount) {
-        this.amount = amount;
+    public void setMontant(double montant) {
+        this.montant = montant;
     }
 
-    public String getCurrency() {
-        return currency;
+    public String getMethodePaiement() {
+        return methodePaiement;
     }
 
-    public void setCurrency(String currency) {
-        this.currency = currency;
+    public void setMethodePaiement(String methodePaiement) {
+        this.methodePaiement = methodePaiement;
     }
 
-    public String getStatus() {
-        return status;
+    public LocalDateTime getDatePaiement() {
+        return datePaiement;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setDatePaiement(LocalDateTime datePaiement) {
+        this.datePaiement = datePaiement;
     }
 }

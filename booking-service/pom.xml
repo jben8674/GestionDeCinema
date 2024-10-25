@@ -65,24 +65,8 @@
 			<scope>test</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>com.bengonohugues</groupId>
-			<artifactId>movies-service</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.bengonohugues</groupId>
-			<artifactId>movies-service</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.bengonohugues</groupId>
-			<artifactId>movies-service</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-			<scope>compile</scope>
-		</dependency>
+
+
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
@@ -104,5 +88,20 @@
 			</plugin>
 		</plugins>
 	</build>
+	<profiles>
+	<profile>
+		<id>local</id>
+		<properties>
+			<spring.profiles.active>local</spring.profiles.active>
+		</properties>
+	</profile>
 
+	<profile>
+
+		<id>dev</id>
+		<properties>
+			<spring.profiles.active>dev</spring.profiles.active>
+		</properties>
+	</profile>
+	</profiles>
 </project>
