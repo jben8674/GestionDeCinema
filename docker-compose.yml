@@ -1,0 +1,105 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres-dev
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=bengono
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=moviesdb
+
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - cinema-network
+
+  api-gateway:
+    build:
+      context: ./apiGateway
+      dockerfile: Dockerfile
+    ports:
+      - "8060:8060"
+
+    depends_on:
+      - eureka-server
+      - movies-service
+      - booking-service
+
+    networks:
+      - cinema-network
+
+  eureka-server:
+    build:
+      context: ./ereuka
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8761"
+
+    networks:
+      - cinema-network
+
+  movies-service:
+    build: ./movies-service
+    container_name: movies-service
+    ports:
+      - "5013:5013"
+
+    depends_on:
+      - eureka-server
+      - postgres
+    restart: always
+    networks:
+      - cinema-network
+
+  booking-service:
+    build: ./booking-service
+    container_name: booking-service
+    ports:
+      - "5089:5089"
+
+    depends_on:
+      - eureka-server
+      - postgres
+    restart: always
+    networks:
+      - cinema-network
+
+  payment-service:
+    build: ./payment-service
+    container_name: payment-service
+    ports:
+      - "5077:5077"
+
+    depends_on:
+      - eureka-server
+      - postgres
+    restart: always
+    networks:
+      - cinema-network
+
+  catalog-service:
+    build: ./catalog-service
+    container_name: catalog-service
+    ports:
+      - "5004:5004"
+
+    depends_on:
+      - eureka-server
+      - postgres
+    restart: always
+    networks:
+      - cinema-network
+
+
+
+
+
+volumes:
+  postgres-data:
+
+networks:
+  cinema-network:
+    driver: bridge

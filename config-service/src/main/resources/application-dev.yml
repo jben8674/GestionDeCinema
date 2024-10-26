@@ -1,0 +1,33 @@
+server:
+  port: 5003
+  forward-headers-strategy: framework
+
+spring:
+  application:
+    name: configservice
+  datasource:
+    url: jdbc:postgresql://postgres-dev:5536/configdb
+    username: bengono
+    password: admin
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    serviceUrl:
+      defaultZone: http://eureka-dev:8761/eureka/
+
+
+springdoc:
+  version: '@springdoc.version@'
+  api-docs:
+    version: openapi_3_1
+  cache:
+    disabled: true

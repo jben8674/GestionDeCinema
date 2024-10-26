@@ -1,0 +1,42 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres-dev
+    ports:
+      - "5432:5432"          # Expose le port PostgreSQL interne 5432 vers l'extérieur 5536
+    environment:
+      - POSTGRES_USER=bengono
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=paymentdb
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: always
+
+  eureka-server:
+    build:
+      context: ../ereuka   # Chemin vers le répertoire contenant le Dockerfile du serveur Eureka
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8761"
+    environment:
+      EUREKA_SERVER: http://eureka-server:8761/eureka
+
+  payment-service:
+    build: .
+    container_name: payment-service
+    ports:
+      - "5077:5077"          # Mappage du port interne 5013 vers le port externe 5013
+    environment:
+      DB_URL: jdbc:postgresql://postgres-dev:5432/paymentdb
+      DB_USERNAME: bengono
+      DB_PASSWORD: admin
+
+    depends_on:
+      - eureka-server
+      - postgres
+    restart: always
+
+
+volumes:
+  postgres-data:
