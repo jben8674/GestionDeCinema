@@ -1,0 +1,33 @@
+server:
+  port: 5013
+  forward-headers-strategy: framework
+
+spring:
+  application:
+    name: movies-service
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/moviesdb}
+    username: ${DB_USERNAME:bengono}
+    password: ${DB_PASSWORD:admin}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+      # Ajout du dialecte PostgreSQL
+      database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+springdoc:
+  version: '@springdoc.version@'
+  api-docs:
+    version: openapi_3_1
+  cache:
+    disabled: true

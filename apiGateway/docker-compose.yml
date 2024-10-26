@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  api-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8060:8060"
+    environment:
+      - SPRING_APPLICATION_NAME=api-gateway
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULT_ZONE=http://eureka-server:8761/eureka/
+      - SPRING_PROFILES_ACTIVE=dev
+    networks:
+      - ereuka-network
+
+networks:
+  ereuka-network:
+    driver: bridge
